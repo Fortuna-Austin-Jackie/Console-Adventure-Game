@@ -10,7 +10,6 @@ public class adventureGame {
         boolean userWantedToPlay = playGameResponse.equals("y");
         boolean userDidntWantedToPlay = playGameResponse.equals("N");
 
-
         if (userWantedToPlay) {
             System.out.println("Enter username:");
             String userName = prompt.nextLine();
