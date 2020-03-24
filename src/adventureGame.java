@@ -1,164 +1,144 @@
 import java.util.Scanner;
+import java.util.Random;
 
 public class adventureGame {
     public static void main(String[] args) {
 
-
-    initGame();
-
-
-
-// TODO: Ask if the user is ready to start. If they type in "yes", start the game.
-
-// TODO: Ask the user for their name. Store this as a variable to personalize the adventure.
-
-// TODO: A classic RPG will have the hero going through different scenarios and battling their enemies.
-    // Display enemy stats and hero stats. Properties and values can be assigned by you.
-    // For example: Health, Attack Points, etc.
-
-// TODO: Decide on what actions your hero can take.
-    // Attack (decreases enemyHealth)
-    // Drink potion (adds to heroHealth)
-    // Run? (ends the game)
-
-// TODO: Keep asking for user input until the enemyHealth reaches 0, then end the game.
+        Scanner prompt = new Scanner(System.in);
+        System.out.println("Do you want to play? [y/N]");
+        String playGameResponse = prompt.nextLine();
+        boolean userWantedToPlay = playGameResponse.equals("y");
+        boolean userDidntWantedToPlay = playGameResponse.equals("N");
 
 
-
-
-
+        if (userWantedToPlay) {
+            System.out.println("Enter username:");
+            String userName = prompt.nextLine();
+            System.out.println("Welcome to the dungeon, " + userName + "!");
+            playGame();
+        } else if (userDidntWantedToPlay){
+            System.out.println("#############    #           #    ##############");
+            System.out.println("#             #    #       #      #");
+            System.out.println("#             #      #   #        #");
+            System.out.println("#             #       # #         #");
+            System.out.println("##############         #          ##########");
+            System.out.println("#             #        #          #");
+            System.out.println("#             #        #          #");
+            System.out.println("#             #        #          #");
+            System.out.println("#############          #          ##############");
 
 
 
 
-
-
-    }
-
-    // Initializes the game, it's being called on from the main //
-    public static void initGame() {
-        Scanner startGamePrompt = new Scanner(System.in);
-        System.out.println("Do you want to play? [yes/NO]");
-        String startGame = startGamePrompt.next();
-        boolean startTheGame = startGame.equals("yes");
-        if (startTheGame) {
-            System.out.println("The game has been started.");
-            // If user agrees to play, get user name //
-            getName();
-        }
-    }
-
-    // Prompts user to put in their username //
-    public static void getName() {
-        Scanner getUserName = new Scanner(System.in);
-        System.out.println("Enter user name.");
-        String userNameInput = getUserName.next();
-        // Once the user puts in their name, it goes to the game functionality //
-            userStats(userNameInput);
-    }
-
-
-    // Game functionality, might have to refactor && rename //
-    public static void userStats(String userNameInput) {
-//        int health = (int) Math.floor((Math.random() * 5) + 15);  // To be used later, generates random health from 15 to 20.
-//        int attack = (int) Math.floor((Math.random() * 3) + 1);   // To be used later, generates random attacks from 1 to 3.
-        int health = 15;
-        int attack = 3;
-        int potionsLeft = 3;
-        int monsterHealth = 20;
-        int monsterAttack = 2;
-
-     // Greets username by their input //
-        System.out.printf("Welcome %s.\n", userNameInput);
-
-     // Displays the hero stats dynamically. No need to change anything here //
-        System.out.printf("Your hero stats | Health: %s \\ Attack: %s |\n", health, attack);
-
-    // Displays the monster stats dynamically. No need to change anything here //
-        System.out.printf("Enemy stats | Health: %s \\ Attack: %s |\n\n", monsterHealth, monsterAttack);
-
-    // Prompt user what they want to do //
-        System.out.println("What would you like to do??");
-        System.out.println("1: Attack // 2. Drink Potion // 3. Run");
-
-    // Scanner picks up the users decision //
-        Scanner userDecision = new Scanner(System.in);
-        String userDecided = userDecision.next();
-
-    // Scanner logic on what action to take next
-        boolean attackMonster = userDecided.equals("1");
-        boolean drinkPotion = userDecided.equals("2");
-        boolean runAway = userDecided.equals("3");
-    // Secret input
-        boolean throwPokeball = userDecided.equals("throwPokeball");
-
-        // Scanner calls for user input
-        if (attackMonster) {
-            // Calls the attack method if user enters 1.
-            attack();
-        } else if (drinkPotion) {
-            // Calls the drink potion method if the user enters 2.
-            drinkPoition();
-        } else if (runAway) {
-            // Calls the run away method if the user enters 3.
-            run();
-        } else if (throwPokeball) {
-            // Calls the throw pokeball method if the user enters throwPokeball
-            throwPokeball();
         }
 
 
+
     }
 
-    // Attack method logic
-    public static void attack() {
-        System.out.println("You have attacked!");
-    }
+    public static void playGame() {
+        // System Objects
+        Scanner in = new Scanner(System.in);
+        Random rand = new Random();
 
-    // Drink potion method logic
-    public static void drinkPoition() {
-        int potionAmount = (int) Math.floor((Math.random() * 4) + 1);
-        System.out.printf("You have restored %s health.", potionAmount);
-    }
+        // Game Variables
+        String[] enemies = {"Orc Warrior", "Undead Rogue", "Troll Shaman", "Tauren Druid"};
+        int maxEnemyHealth = 75;
+        int enemyAttackDamage = 25;
 
-    // Run away method logic
-    public static void run() {
-        int chanceToFlee = (int) Math.floor((Math.random() * 100) + 1); // Random number generated if user can flee or not.
-        // Logic to see if the user can flee or not //
-        if (chanceToFlee < 60) {
-            System.out.println("Couldn't flee!");
-        } else {
-            System.out.println("...");
-            System.out.println("Got away safely!");
+        // Player variables
+        int health = 100;
+        int attackDamage = 50;
+        int numHealthPotions = 3;
+        int healthPotionHealAmount = 30;
+        int healthPotionDropChance = 50; // percentage
+
+        boolean running = true;
+
+        GAME:
+        while (running) {
+            System.out.println("---------------------------------------------");
+
+            int enemyHealth = rand.nextInt(maxEnemyHealth);
+            String enemy = enemies[rand.nextInt(enemies.length)];
+            System.out.println("\t# A wild " + enemy + " appeared! #\n");
+
+            while (enemyHealth > 0) {
+                System.out.println("\tYour HP: " + health);
+                System.out.println("\t" + enemy + "'s HP: " + enemyHealth);
+                System.out.println("\n\tWhat would you like to do?");
+                System.out.println("\t1. Attack");
+                System.out.println("\t2. Drink health potion");
+                System.out.println("\t3. Run!");
+
+                String input = in.nextLine();
+                if (input.equals("1")) {
+                    int damageDealth = rand.nextInt(attackDamage);
+                    int damageTaken = rand.nextInt(enemyAttackDamage);
+
+                    enemyHealth -= damageDealth;
+                    health -= damageTaken;
+
+                    System.out.println("\t> You strike the " + enemy + " for " + damageDealth + " damage." );
+                    System.out.println("\t> " + enemy + " strikes you back for " + damageTaken + " damage.\n");
+
+
+                    if (health < 1) {
+                        System.out.println("\t> You are too weak to continue!");
+                        break;
+                    }
+                } else if (input.equals("2")) {
+                    if(numHealthPotions > 0) {
+                        health += healthPotionHealAmount;
+                        numHealthPotions--;
+                        System.out.println("\t> You drink a health potion and recover " + healthPotionHealAmount + " health.");
+                        System.out.println("\t> You now have " + health + " HP.");
+                        System.out.println("\t> You have " + numHealthPotions + " health potions remaining.\n");
+                    } else {
+                        System.out.println("\t> You have no health potons left!");
+                    }
+                } else if (input.equals("3")) {
+                    System.out.println("\t> You run away from " + enemy + "!");
+                    continue GAME;
+                } else {
+                    System.out.println("\t> Invalid command.");
+                }
+            }
+
+            if(health < 1) {
+                System.out.println("You have fainted.");
+                break;
+            }
+
+            System.out.println("---------------------------------------------");
+            System.out.println(" # " + enemy + " was defeated! # ");
+            System.out.println(" # You have " + health + " HP left. # ");
+            if (rand.nextInt(100) < healthPotionDropChance) {
+                numHealthPotions++;
+                System.out.println(" # The " + enemy + " dropped a health potion! # ");
+                System.out.println(" # You now how " + numHealthPotions + " health potion(s). # ");
+            }
+            System.out.println("---------------------------------------------");
+            System.out.println("What would you like to do?");
+            System.out.println("1. Continue Fighting.");
+            System.out.println("2. Exit dungeon.");
+
+            String input = in.nextLine();
+
+            while (!input.equals("1") && !input.equals("2")) {
+                System.out.println("Invalid command!");
+                input = in.nextLine();
+            }
+
+            if(input.equals("1")) {
+                System.out.println("You continue on your adventure!");
+            } else if (input.equals("2")) {
+                System.out.println("You exit the dungeon.");
+                break;
+            }
         }
+        System.out.println("##########################");
+        System.out.println("# Thank you for playing! #");
+        System.out.println("##########################");
     }
-
-    // ThrowPokeball logic
-    public static void throwPokeball() {
-        int chanceToCapture = (int) Math.floor((Math.random() * 100) + 1); // Random number generated if the user catches the monster or not
-        // Logic to see if the user catches the monster or not
-        if (chanceToCapture < 33) {
-            System.out.println("You've caught the monster!");
-        } else {
-            System.out.println("Oh no, the monster broke free!");
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
